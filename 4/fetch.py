@@ -17,8 +17,8 @@ def main():
     )
 
     # melakukan request by total_page_request (1 page = 100 comments)
-    file                = open('comment_HLkZNGl101k.txt', 'a')
-    total_page_request  = 50
+    file                = open('comment_HLkZNGl101k.txt', 'a', encoding="utf8")
+    total_page_request  = 5
     next_page_token     = ''
     for i in range(0, total_page_request):
         print("Mengerjakan request API #" + str(i+1) + " dari #" + str(total_page_request) + "...")

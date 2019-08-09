@@ -8,7 +8,7 @@ factory = StemmerFactory()
 stemmer = factory.create_stemmer()
 
 # load komentar dari file
-file = open('20190806_comment_HLkZNGl101k.txt', 'r')
+file = open('20190806_comment_HLkZNGl101k.txt', 'r', encoding="utf8")
 
 def main():
     regex     = re.compile("[^a-zA-Z0-9\s]")    
@@ -24,7 +24,7 @@ def main():
             line = nltk.word_tokenize(line) # memisahkan kata per kata di dalam kalimat (tokenization)
             line = ' '.join([word for word in line if word not in ind_stops]) # menghilangkan stopword
             line = stemmer.stem(line)       # pake stemmer, depe preprocessing jadi lalod. Apa taruh pas di mo ba simpang jo?
-
+            
             print(line, "\n")
             
             if idx == 10:
