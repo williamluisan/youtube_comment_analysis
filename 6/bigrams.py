@@ -13,10 +13,3 @@ bigrams_negative = [
     ('mampus', 'lu'), ('bacot', 'anjing'),
     ('sabar', 'aja')
 ]
-
-class Bigrams:
-    def load(self, type):
-        if type == 'positive':
-            return bigrams_positive
-        else:
-            return bigrams_negative

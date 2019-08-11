@@ -13,10 +13,3 @@ keywords_negative = [
     'fitnah', 'hina', 'gila', 'bego', 'seksi', 
     'hot', 'drama', 'lol'
 ]
-
-class Keywords:
-    def load(self, type):
-        if type == 'positive':
-            return keywords_positive
-        else:
-            return keywords_negative

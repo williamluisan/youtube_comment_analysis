@@ -1,4 +1,5 @@
-import os, json, datetime
+import config
+import sys, os, json, datetime
 import googleapiclient.discovery
 
 class Fetch:
@@ -10,8 +11,8 @@ class Fetch:
         # variabel google API
         api_service_name = "youtube"
         api_version = "v3"
-        DEVELOPER_KEY = "AIzaSyBKrZsjpGpFp5CPwFFt4eEd9GjBM5EUA0g"
-        VIDEO_ID = "HLkZNGl101k"
+        DEVELOPER_KEY = config.DEVELOPER_KEY
+        VIDEO_ID = config.YOUTUBE_VIDEO_ID
 
         # membuat google api (youtube) instance
         youtube = googleapiclient.discovery.build(
@@ -20,7 +21,7 @@ class Fetch:
 
         # melakukan request by total_page_request (1 page = 100 comments)
         file                = open('data/' + str(datetime.datetime.now().date()) + '_comment_' + VIDEO_ID + '.txt', 'a', encoding="utf8")
-        total_page_request  = 5
+        total_page_request  = config.TOTAL_PAGE_REQUEST
         next_page_token     = ''
         for i in range(0, total_page_request):
             print("Mengerjakan request API #" + str(i+1) + " dari #" + str(total_page_request) + "...")
