@@ -1,12 +1,12 @@
-import config
+from config import config
 import sys, re, pprint, time, os
 import nltk
 import nltk.sentiment.sentiment_analyzer
 from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
-
-import keywords
-import bigrams
+from resources import keywords
+from resources import bigrams
+from Visualize import Visualize
 
 # file yang akan dianalisa
 FILE_TO_ANALYSE = config.FILE_TO_ANALYSE
@@ -29,6 +29,9 @@ file_comment_uncat  = open("data/comments_uncat.txt", 'a', encoding="utf8")
 
 class Analyse:
     def main(self):
+        # waktu dimulai eksekusi fungsi main
+        start_time  = time.time()
+
         tot_comments_to_analyze = int(input('Total komentar yang akan dianalisa (0 = semua, 1 .. ' + str(tot_comments_available) + ') : '))
 
         regex        = re.compile("[^a-zA-Z0-9\s]")    
@@ -40,6 +43,9 @@ class Analyse:
 
         comments_positive = comments_negative = comments_uncategorized = 0
         keyword_pos_match_total = keyword_neg_match_total = bigram_pos_match_total = bigram_neg_match_total = 0
+
+        # membuat object untuk visualisasi
+        visualize = Visualize()
 
         # mengambil komentar per line
         no = 0
@@ -132,7 +138,7 @@ class Analyse:
         print("Total komentar negatif: ", comments_negative)
         print("Total komentar tidak terkategorikan: ", comments_uncategorized, "\n")
         print(
-            "Total komentar dianalisa = {} ({}%) dari {} komentar" 
+            "Total komentar dianalisa = {} ({:.2f}%) dari {} komentar" 
             . format(comments_analyzed, comments_analyzed_percentage, comments_total)
         )
         print("Keyword positif (match) = {}" . format(keyword_pos_match_total))
@@ -141,10 +147,19 @@ class Analyse:
         print("Bigram negatif (match) = {}" . format(bigram_neg_match_total))
         print("--------------------------------------------------------------------")
 
+        # mengitung waktu eksekusi
+        stop_time   = time.time()
+        seconds_executed = stop_time - start_time
+        minutes_executed = (stop_time - start_time) / 60
+        print("\nexecution time: {:.2f} seconds / {:.2f} minutes" . format(seconds_executed, minutes_executed))
+
+        # generate grafik
+        visualize.main(
+            [comments_uncategorized, comments_positive, comments_negative], 
+            [keyword_pos_match_total, keyword_neg_match_total, bigram_pos_match_total, bigram_neg_match_total], 
+            comments_total,
+            tot_comments_available
+        )
+
 if __name__ == "__main__":
-    start_time  = time.time()
     Analyse().main()
-    stop_time   = time.time()
-    seconds_executed = stop_time - start_time
-    minutes_executed = (stop_time - start_time) / 60
-    print("\nexecution time: {:.2f} seconds / {:.2f} minutes" . format(seconds_executed, minutes_executed))

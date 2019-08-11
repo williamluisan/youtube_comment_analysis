@@ -1,4 +1,4 @@
-import config
+from config import config
 import sys, os, json, datetime
 import googleapiclient.discovery
 
