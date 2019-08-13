@@ -7,6 +7,7 @@ from config import config
 from resources import keywords
 from resources import bigrams
 from Visualize import Visualize
+from Train import Train
 
 # file yang akan dianalisa
 FILE_TO_ANALYSE = config.FILE_TO_ANALYSE
@@ -32,6 +33,10 @@ class Analyse:
         # waktu dimulai eksekusi fungsi main
         start_time  = time.time()
 
+        # melakukan training feature
+        trainer = Train()
+        classifier = trainer.main()
+
         tot_comments_to_analyze = int(input('Total komentar yang akan dianalisa (0 = semua, 1 .. ' + str(tot_comments_available) + ') : '))
 
         regex        = re.compile("[^a-zA-Z0-9\s]")    
@@ -43,6 +48,7 @@ class Analyse:
 
         comments_positive = comments_negative = comments_uncategorized = 0
         keyword_pos_match_total = keyword_neg_match_total = bigram_pos_match_total = bigram_neg_match_total = 0
+        pos = neg = 0
 
         # membuat object untuk visualisasi
         visualize = Visualize()
@@ -58,7 +64,31 @@ class Analyse:
                 line = nltk.word_tokenize(line) # memisahkan kata per kata di dalam kalimat (tokenization)
                 line = ' '.join([word for word in line if word not in ind_stops]) # menghilangkan stopword
                 line = stemmer.stem(line)       # stemming
+                line_split = nltk.word_tokenize(line) # memecahkan kembali menjadi kata per kata
                 
+                # melakukan prediksi
+                for word in line_split:
+                    classifyingResult = classifier.classify(trainer.word_feats(word))
+                    if classifyingResult == 'neg':
+                        neg = neg + 1
+                    if classifyingResult == 'pos':
+                        pos = pos + 1
+                
+                positive_value = float(pos)/len(line_split)
+                negative_value = float(neg)/len(line_split)
+
+                if positive_value > negative_value:
+                    comments_positive += 1
+                    file_comment_pos.write(line + '\n\n')
+                
+                if positive_value < negative_value:
+                    comments_negative += 1
+                    file_comment_neg.write(line + '\n\n')
+                
+                # kembalikan ke state awal = 0
+                pos = neg = 0
+
+                """
                 # hitung positif dan negatif
                 analysis_keyword_pos = nltk.sentiment.util.extract_unigram_feats(line.split(), keywords_pos)
                 analysis_keyword_neg = nltk.sentiment.util.extract_unigram_feats(line.split(), keywords_neg)
@@ -95,6 +125,7 @@ class Analyse:
                 keyword_neg_match_total += count_keyword_neg
                 bigram_pos_match_total  += count_bigram_pos
                 bigram_neg_match_total  += count_bigram_neg
+                """
 
                 # -------------------------------------------
                 # | Debugging area
@@ -105,14 +136,16 @@ class Analyse:
                 # keywords debugging
                 #pprint.pprint(analysis_keyword_pos)
                 #pprint.pprint(analysis_keyword_neg)
-                print("Keyword positif: ", count_keyword_pos)
-                print("Keyword negatif: ", count_keyword_neg)
+                #print("Keyword positif: ", count_keyword_pos)
+                #print("Keyword negatif: ", count_keyword_neg)
+                print("Positive prediction: ", positive_value)
+                print("Negative prediction: ", negative_value, "\n")
 
                 # bigram debugging            
                 #pprint.pprint(analysis_bigram_pos)
                 #pprint.pprint(analysis_bigram_neg)
-                print("Bigram positif: ", count_bigram_pos)
-                print("Bigram negatif: ", count_bigram_neg, "\n")            
+                #print("Bigram positif: ", count_bigram_pos)
+                #print("Bigram negatif: ", count_bigram_neg, "\n")            
 
                 # -------------------------------------------
                 # | // Debugging area
