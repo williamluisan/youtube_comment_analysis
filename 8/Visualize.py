@@ -10,7 +10,6 @@ class Visualize:
         # Set up the matplotlib figure
         f, (ax1) = plt.subplots(1, 1, figsize=(6, 5), sharex=False)
 
-
         # Grafik komentar
         labels = 'Tidak terkategorikan', 'Mendukung', 'Tidak mendukung'
         sizes = comments_val
