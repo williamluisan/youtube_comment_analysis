@@ -1,9 +1,9 @@
-from config import config
 import sys, re, pprint, time, os
 import nltk
 import nltk.sentiment.sentiment_analyzer
 from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+from config import config
 from resources import keywords
 from resources import bigrams
 from Visualize import Visualize
