@@ -97,15 +97,64 @@ class Analyse:
                 # kembalikan ke state awal = 0
                 pos = neg = 0
 
+                """
+                # hitung positif dan negatif
+                analysis_keyword_pos = nltk.sentiment.util.extract_unigram_feats(line.split(), keywords_pos)
+                analysis_keyword_neg = nltk.sentiment.util.extract_unigram_feats(line.split(), keywords_neg)
+                count_keyword_pos    = sum(map((1).__eq__, analysis_keyword_pos.values()))
+                count_keyword_neg    = sum(map((1).__eq__, analysis_keyword_neg.values()))
+
+                analysis_bigram_pos  = nltk.sentiment.util.extract_bigram_feats(line.split(), bigrams_pos) 
+                analysis_bigram_neg  = nltk.sentiment.util.extract_bigram_feats(line.split(), bigrams_neg) 
+                count_bigram_pos     = sum(map((1).__eq__, analysis_bigram_pos.values()))
+                count_bigram_neg     = sum(map((1).__eq__, analysis_bigram_neg.values()))
+                
+                # lakukan perhitungan total
+                total_pos   = count_keyword_pos + count_bigram_pos
+                total_neg   = count_keyword_neg + count_bigram_neg
+
+                if (total_pos > total_neg):
+                    comments_positive += 1
+                    file_comment_pos.write(line + '\n\n')
+
+                if (total_pos < total_neg):
+                    comments_negative += 1
+                    file_comment_neg.write(line + '\n\n')
+
+                if (total_pos == 0 and total_neg == 0):
+                    comments_uncategorized += 1
+                    file_comment_uncat.write(line + '\n\n')
+
+                if (total_pos != 0 and total_neg != 0 and total_pos == total_neg):
+                    comments_uncategorized +=1
+                    file_comment_uncat.write(line + '\n')
+
+                # perhitungan total keywords dan bigram
+                keyword_pos_match_total += count_keyword_pos
+                keyword_neg_match_total += count_keyword_neg
+                bigram_pos_match_total  += count_bigram_pos
+                bigram_neg_match_total  += count_bigram_neg
+                """
+
                 # -------------------------------------------
                 # | Debugging area
                 # -------------------------------------------
                 no += 1
                 print(str(no)+". "+line)
 
-                # perdiction debugging
+                # keywords debugging
+                #pprint.pprint(analysis_keyword_pos)
+                #pprint.pprint(analysis_keyword_neg)
+                #print("Keyword positif: ", count_keyword_pos)
+                #print("Keyword negatif: ", count_keyword_neg)
                 print("Positive prediction: ", positive_value)
-                print("Negative prediction: ", negative_value, "\n")      
+                print("Negative prediction: ", negative_value, "\n")
+
+                # bigram debugging            
+                #pprint.pprint(analysis_bigram_pos)
+                #pprint.pprint(analysis_bigram_neg)
+                #print("Bigram positif: ", count_bigram_pos)
+                #print("Bigram negatif: ", count_bigram_neg, "\n")            
 
                 # -------------------------------------------
                 # | // Debugging area
@@ -134,6 +183,10 @@ class Analyse:
             "Total komentar dianalisa = {} ({:.2f}%) dari {} komentar" 
             . format(comments_analyzed, comments_analyzed_percentage, comments_total)
         )
+        print("Keyword positif (match) = {}" . format(keyword_pos_match_total))
+        print("Keyword negatif (match) = {}" . format(keyword_neg_match_total))
+        print("Bigram positif (match) = {}" . format(bigram_pos_match_total))
+        print("Bigram negatif (match) = {}" . format(bigram_neg_match_total))
         print("--------------------------------------------------------------------")
 
         # mengitung waktu eksekusi
