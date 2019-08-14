@@ -11,7 +11,7 @@ class Train:
     def main(self):
         keywords_positive   = keywords.keywords_positive
         keywords_negative   = keywords.keywords_negative
-
+        
         positive_feature    = [(self.word_feats(pos), 'pos') for pos in keywords_positive] 
         negative_feature    = [(self.word_feats(neg), 'neg') for neg in keywords_negative]
 
@@ -19,3 +19,5 @@ class Train:
         classifier  = NaiveBayesClassifier.train(train_set)
         
         return classifier
+
+Train().main()
